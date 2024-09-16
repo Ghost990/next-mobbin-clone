@@ -34,11 +34,11 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
 import PhoneScreen from "../../public/images/phone-screen.webp";
-import { mock } from "node:test";
+import { mock } from "node:test"; 
 
-export function CarouselCard({ title, images }: { title: string; url: array }) {
+export function CarouselCard({ title, images }: { title: string; images: array }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [api, setApi] = React.useState<CarouselApi>();
+  const [api, setApi] = React.useState<CarouselApi>(); 
   const [current, setCurrent] = React.useState(0);
   const [scrollPrev, setScrollPrev] = React.useState<boolean>(false);
   const [scrollNext, setScrollNext] = React.useState<boolean>(true);
@@ -74,7 +74,7 @@ export function CarouselCard({ title, images }: { title: string; url: array }) {
           priority
         /> */}
 
-        {/* <img src={images[0].url} alt="phone screen" className="rounded-3xl overflow-hidden w-full h-auto md:hidden" /> */}
+      
 
         <div className="relative rounded-[28px] overflow-hidden w-full hidden md:block md:bg-foreground/[0.04] md:group-hover:bg-foreground/[0.06] transition duration-300 md:pt-6 md:pb-7">
           <Carousel
