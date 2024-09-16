@@ -34,8 +34,9 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
 import PhoneScreen from "../../public/images/phone-screen.webp";
+import { mock } from "node:test";
 
-export function CarouselCard() {
+export function CarouselCard({ title, images }: { title: string; url: array }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
@@ -64,14 +65,16 @@ export function CarouselCard() {
       <div className="group relative flex flex-col gap-y-3 md:gap-y-4">
         <Link href="/" className="peer absolute inset-0 z-10" />
 
-        <Image
+        {/* <Image
           src={PhoneScreen}
           alt="phone screen"
           width={300}
           height={800}
           className="rounded-3xl overflow-hidden w-full h-auto md:hidden"
           priority
-        />
+        /> */}
+
+        {/* <img src={images[0].url} alt="phone screen" className="rounded-3xl overflow-hidden w-full h-auto md:hidden" /> */}
 
         <div className="relative rounded-[28px] overflow-hidden w-full hidden md:block md:bg-foreground/[0.04] md:group-hover:bg-foreground/[0.06] transition duration-300 md:pt-6 md:pb-7">
           <Carousel
@@ -83,19 +86,24 @@ export function CarouselCard() {
             }}
           >
             <CarouselContent className="m-0">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <CarouselItem key={index} className="px-7">
-                  <Image
-                    src={PhoneScreen}
-                    alt="phone screen"
-                    width={300}
-                    height={800}
-                    className="rounded-3xl overflow-hidden max-h-[583px]"
-                    priority={index === 0 ? true : false}
-                  />
-                </CarouselItem>
-              ))}
+              {images &&
+                images.map((item, index) => (
+                  <CarouselItem key={index} className="px-7">
+                    <Image
+                        src={item?.url}
+                        alt={item?.title || "phone screen"}
+                        width={300}
+                        height={800}
+                        className="rounded-3xl overflow-hidden w-full h-auto"
+                        priority
+                      />
+
+                    {console.log("Image URL:", item?.url)}
+                  </CarouselItem>
+                ))}
             </CarouselContent>
+
+
             <CarouselPrevious
               variant="ghost"
               className={cn(
@@ -114,7 +122,7 @@ export function CarouselCard() {
 
           <div className="absolute z-10 bottom-3 left-1/2 transform -translate-x-1/2 invisible group-hover:visible">
             <div className="flex gap-3">
-              {Array.from({ length: 3 }).map((_, index) => (
+              {Array.from({ length: images ? images.length : 3 }).map((_, index) => (
                 <button
                   key={index}
                   className="relative size-1.5 overflow-hidden rounded-full"
@@ -137,7 +145,7 @@ export function CarouselCard() {
 
           <div className="flex grow flex-col">
             <span className="line-clamp-1 text-body-medium-bold underline decoration-transparent group-hover:decoration-current transition-colors ease-out">
-              Fake Name App
+              {title}
             </span>
             <span className="line-clamp-1 text-sm text-muted-foreground font-normal">
               Fake sentence for test

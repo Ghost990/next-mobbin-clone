@@ -10,7 +10,7 @@ interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  name: "Next Mobbin Clone",
+  name: "Deloitte Mobbin Clone",
   description:
     "An ui colorgen application built to help you with color setup in shadcn/ui.",
   url: "https://next-mobbin-clone.app",

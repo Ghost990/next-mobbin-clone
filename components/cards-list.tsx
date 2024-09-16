@@ -1,22 +1,27 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { CarouselCard } from "./carousels/carousel-card";
 import { CheckboxCard } from "./checkbox-card";
+import data from "../public/database.json"; // Ensure this path is correct
 
 interface CardsListProps {
   platform: string;
   feature: string;
 }
 
-const GridCard = ({ children }: { children: React.ReactNode }) => (
-  <div
-    className={cn(
-      "grid content-start [--column-gap:12px] md:[--column-gap:24px] gap-x-[--column-gap] gap-y-8 md:gap-y-10 [--min-column-width:169px] md:[--min-column-width:208px] lg:[--min-column-width:243px] [--max-column-count:7] [--total-gap-width:calc((var(--max-column-count)-1)*var(--column-gap))] [--max-column-width:calc((100%-var(--total-gap-width))/var(--max-column-count))] grid-cols-[repeat(auto-fill,minmax(max(var(--min-column-width),var(--max-column-width)),1fr))]"
-      // "max-sm:[&>*:nth-child(n+5)]:hidden max-md:[&>*:nth-child(n+7)]:hidden max-xl:[&>*:nth-child(n+9)]:hidden"
-    )}
-  >
-    {children}
-  </div>
-);
+const GridCard = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div
+      className={cn(
+        "grid content-start [--column-gap:12px] md:[--column-gap:24px] gap-x-[--column-gap] gap-y-8 md:gap-y-10 [--min-column-width:169px] md:[--min-column-width:208px] lg:[--min-column-width:243px] [--max-column-count:7] [--total-gap-width:calc((var(--max-column-count)-1)*var(--column-gap))] [--max-column-width:calc((100%-var(--total-gap-width))/var(--max-column-count))] grid-cols-[repeat(auto-fill,minmax(max(var(--min-column-width),var(--max-column-width)),1fr))]"
+      )}
+    >
+      {children}
+    </div>
+  );
+};
 
 const FeatureComponent = ({ feature }: { feature: string }) => {
   switch (feature) {
@@ -29,17 +34,29 @@ const FeatureComponent = ({ feature }: { feature: string }) => {
     case "flows":
       return <FlowsComponent />;
     default:
-      return null; // Vous pouvez également retourner un composant par défaut ou ne rien rendre.
+      return null;
   }
 };
 
-const AppsComponent = () => (
-  <GridCard>
-    {Array.from({ length: 10 }).map((_, index) => (
-      <CarouselCard key={index} />
-    ))}
-  </GridCard>
-);
+const AppsComponent = () => {
+  const [mockData, setMockData] = useState<Array<any> | null>(null);
+
+  useEffect(() => {
+    // Set mockData to data.images, since that's the array you want to work with
+    if (data && Array.isArray(data)) {
+      setMockData(data);
+    }
+  }, []);
+
+  return (
+    <GridCard>
+      {mockData &&
+        mockData.map((item, index) => (
+          <CarouselCard key={index} title={item.title} images={item.images} /> 
+        ))}
+    </GridCard>
+  );
+};
 
 const ScreensComponent = () => (
   <GridCard>

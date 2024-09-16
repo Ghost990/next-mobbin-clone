@@ -9,6 +9,9 @@ const nextConfig = {
       },
     ];
   },
-}
+  images: {
+    domains: ['www.seosamba.com', 'picsum.photos'], // Add external image domains here
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
