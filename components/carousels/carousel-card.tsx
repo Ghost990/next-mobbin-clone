@@ -39,6 +39,8 @@ export function CarouselCard({
     });
   }, [api]);
 
+  {console.log("Image URL:", item?.url)}
+
   return (
     <ContextMenuCard>
       <div className="group relative flex flex-col gap-y-3 md:gap-y-4">
@@ -64,7 +66,7 @@ export function CarouselCard({
                     className="rounded-3xl overflow-hidden w-full h-auto"
                     priority
                   />
-                  {console.log("Image URL:", item?.url)}
+                  
                 </CarouselItem>
               ))}
             </CarouselContent>
