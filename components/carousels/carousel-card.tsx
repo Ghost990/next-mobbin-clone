@@ -36,7 +36,7 @@ import { useState } from "react";
 import PhoneScreen from "../../public/images/phone-screen.webp";
 import { mock } from "node:test"; 
 
-export function CarouselCard({ title, images }: { title?: string; images?: object[] }) {
+export function CarouselCard({ title, images }: { title?: string; images?: any[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [api, setApi] = React.useState<CarouselApi>(); 
   const [current, setCurrent] = React.useState(0);
