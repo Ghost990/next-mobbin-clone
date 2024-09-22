@@ -9,75 +9,40 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipPortal,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-import React from "react";
-
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-
-import { Icons } from "@/components/icons";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useState } from "react";
-import PhoneScreen from "../../public/images/phone-screen.webp";
-import { mock } from "node:test"; 
+import { cn } from "@/lib/utils";
 
-export function CarouselCard({ title, images }: { title: string; images: { title?: string; url?: string; }[] | { title?: string; url?: string; } }) {
+export function CarouselCard({
+  title,
+  images,
+}: {
+  title: string;
+  images: { title?: string; url?: string }[];
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(0);
-  const [scrollPrev, setScrollPrev] = React.useState<boolean>(false);
-  const [scrollNext, setScrollNext] = React.useState<boolean>(true);
+  const [api, setApi] = useState<CarouselApi | null>(null);
+  const [current, setCurrent] = useState(0);
+  const [scrollPrev, setScrollPrev] = useState<boolean>(false);
+  const [scrollNext, setScrollNext] = useState<boolean>(true);
 
-  React.useEffect(() => {
-    if (!api) {
-      return;
-    }
+  useEffect(() => {
+    if (!api) return;
 
     setCurrent(api.selectedScrollSnap() + 1);
 
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap() + 1);
-    });
-
-    api.on("select", () => {
       setScrollPrev(api.canScrollPrev());
       setScrollNext(api.canScrollNext());
     });
   }, [api]);
 
-  // Ensure `images` is treated as an array
-  const imagesArray = Array.isArray(images) ? images : [images];
-
   return (
     <ContextMenuCard>
       <div className="group relative flex flex-col gap-y-3 md:gap-y-4">
         <Link href="/" className="peer absolute inset-0 z-10" />
-
-        {/* <Image
-          src={PhoneScreen}
-          alt="phone screen"
-          width={300}
-          height={800}
-          className="rounded-3xl overflow-hidden w-full h-auto md:hidden"
-          priority
-        /> */}
-
-      
 
         <div className="relative rounded-[28px] overflow-hidden w-full hidden md:block md:bg-foreground/[0.04] md:group-hover:bg-foreground/[0.06] transition duration-300 md:pt-6 md:pb-7">
           <Carousel
@@ -89,23 +54,20 @@ export function CarouselCard({ title, images }: { title: string; images: { title
             }}
           >
             <CarouselContent className="m-0">
-              {imagesArray &&
-                imagesArray.map((item, index) => (
-                  <CarouselItem key={index} className="px-7">
-                    <Image
-                        src={item?.url}
-                        alt={item?.title || "phone screen"}
-                        width={300}
-                        height={800}
-                        className="rounded-3xl overflow-hidden w-full h-auto"
-                        priority
-                      />
-
-                    {console.log("Image URL:", item?.url)}
-                  </CarouselItem>
-                ))}
+              {images.map((item, index) => (
+                <CarouselItem key={index} className="px-7">
+                  <Image
+                    src={item.url || "/fallback-image.jpg"}
+                    alt={item.title || "phone screen"}
+                    width={300}
+                    height={800}
+                    className="rounded-3xl overflow-hidden w-full h-auto"
+                    priority
+                  />
+                  {console.log("Image URL:", item?.url)}
+                </CarouselItem>
+              ))}
             </CarouselContent>
-
 
             <CarouselPrevious
               variant="ghost"
@@ -125,7 +87,7 @@ export function CarouselCard({ title, images }: { title: string; images: { title
 
           <div className="absolute z-10 bottom-3 left-1/2 transform -translate-x-1/2 invisible group-hover:visible">
             <div className="flex gap-3">
-              {Array.from({ length: images ? images.length : 3 }).map((_, index) => (
+              {Array.from({ length: images.length }).map((_, index) => (
                 <button
                   key={index}
                   className="relative size-1.5 overflow-hidden rounded-full"
@@ -151,88 +113,8 @@ export function CarouselCard({ title, images }: { title: string; images: { title
               {title}
             </span>
             <span className="line-clamp-1 text-sm text-muted-foreground font-normal">
-              Fake sentence for test
+              Some description text
             </span>
-          </div>
-
-          <div
-            className={cn(
-              "hidden gap-x-2 group-focus-within:flex group-hover:flex transition ease-out",
-              menuOpen ? "flex" : "hidden"
-            )}
-          >
-            <TooltipProvider delayDuration={0}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    size="icon"
-                    className="rounded-xl z-50"
-                    onClick={() => alert("Saved!!")}
-                  >
-                    <Icons.bookmark className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipPortal>
-                  <TooltipContent
-                    sideOffset={10}
-                    className="rounded-lg text-xs"
-                  >
-                    <p>Save to collections</p>
-                  </TooltipContent>
-                </TooltipPortal>
-              </Tooltip>
-
-              <Tooltip>
-                <DropdownMenu
-                  open={menuOpen}
-                  onOpenChange={() => setMenuOpen(!menuOpen)}
-                >
-                  <DropdownMenuTrigger asChild>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="secondary"
-                        size="icon"
-                        className="rounded-xl z-50"
-                      >
-                        <Icons.options className="size-5" />
-                      </Button>
-                    </TooltipTrigger>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem asChild>
-                      <Link
-                        className="flex justify-start items-center gap-x-2"
-                        href="/"
-                      >
-                        <Icons.download className="size-5" />
-                        <span>Download all screens</span>
-                        <Badge className="px-2 font-medium uppercase border-none">
-                          PRO
-                        </Badge>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        className="flex justify-start items-center gap-x-2"
-                        href="/"
-                      >
-                        <Icons.link className="size-5" />
-                        <span>Copy link app</span>
-                      </Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                <TooltipPortal>
-                  <TooltipContent
-                    sideOffset={10}
-                    className="rounded-lg text-xs"
-                  >
-                    <p>Download & Share</p>
-                  </TooltipContent>
-                </TooltipPortal>
-              </Tooltip>
-            </TooltipProvider>
           </div>
         </div>
       </div>

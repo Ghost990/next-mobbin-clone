@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { CarouselCard } from "./carousels/carousel-card";
 import { CheckboxCard } from "./checkbox-card";
-import data from "../public/database.json"; // Ensure this path is correct
+import data from "../public/database.json";
 
 interface CardsListProps {
   platform: string;
@@ -42,7 +42,6 @@ const AppsComponent = () => {
   const [mockData, setMockData] = useState<Array<any> | null>(null);
 
   useEffect(() => {
-    // Set mockData to data.images, since that's the array you want to work with
     if (data && Array.isArray(data)) {
       setMockData(data);
     }
@@ -53,12 +52,10 @@ const AppsComponent = () => {
       {mockData &&
         mockData.map((item, index) => (
           <CarouselCard
-      key={index}
-      title={`Card Title ${index + 1}`} // You can replace this with actual titles if you have them
-      images={[
-        { title: item.images[0].title || `Image ${index + 1}`, url: item.images[0].url || "" } // Replace this with real image data
-      ]}
-    />
+            key={index}
+            title={item.title || `Card Title ${index + 1}`}
+            images={item.images || []}
+          />
         ))}
     </GridCard>
   );
@@ -80,13 +77,28 @@ const UiElementsComponent = () => (
   </GridCard>
 );
 
-const FlowsComponent = () => (
-  <GridCard>
-    {Array.from({ length: 10 }).map((_, index) => (
-      <CarouselCard key={index} />
-    ))}
-  </GridCard>
-);
+const FlowsComponent = () => {
+  const [mockData, setMockData] = useState<Array<any> | null>(null);
+
+  useEffect(() => {
+    if (data && Array.isArray(data)) {
+      setMockData(data);
+    }
+  }, []);
+
+  return (
+    <GridCard>
+      {mockData &&
+        mockData.map((item, index) => (
+          <CarouselCard
+            key={index}
+            title={item.title || `Flow Title ${index + 1}`}
+            images={item.images || []}
+          />
+        ))}
+    </GridCard>
+  );
+};
 
 export function CardsList({ platform, feature }: CardsListProps) {
   return <FeatureComponent feature={feature} />;
