@@ -39,7 +39,7 @@ export function CarouselCard({
     });
   }, [api]);
 
-  {console.log("Image URL:", item?.url)}
+  
 
   return (
     <ContextMenuCard>
