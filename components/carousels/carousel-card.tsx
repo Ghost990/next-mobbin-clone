@@ -36,9 +36,9 @@ import { useState } from "react";
 import PhoneScreen from "../../public/images/phone-screen.webp";
 import { mock } from "node:test"; 
 
-export function CarouselCard({ title, images }: { title?: string; images?: { title?: string; url?: string } }) {
+export function CarouselCard({ title, images }: { title: string; images: { title?: string; url?: string; }[] | { title?: string; url?: string; } }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [api, setApi] = React.useState<CarouselApi>(); 
+  const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [scrollPrev, setScrollPrev] = React.useState<boolean>(false);
   const [scrollNext, setScrollNext] = React.useState<boolean>(true);
@@ -59,6 +59,9 @@ export function CarouselCard({ title, images }: { title?: string; images?: { tit
       setScrollNext(api.canScrollNext());
     });
   }, [api]);
+
+  // Ensure `images` is treated as an array
+  const imagesArray = Array.isArray(images) ? images : [images];
 
   return (
     <ContextMenuCard>
@@ -86,8 +89,8 @@ export function CarouselCard({ title, images }: { title?: string; images?: { tit
             }}
           >
             <CarouselContent className="m-0">
-              {images &&
-                images.map((item, index) => (
+              {imagesArray &&
+                imagesArray.map((item, index) => (
                   <CarouselItem key={index} className="px-7">
                     <Image
                         src={item?.url}
