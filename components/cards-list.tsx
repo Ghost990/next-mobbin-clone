@@ -52,7 +52,13 @@ const AppsComponent = () => {
     <GridCard>
       {mockData &&
         mockData.map((item, index) => (
-          <CarouselCard key={index} title={item.title} images={item.images} /> 
+          <CarouselCard
+      key={index}
+      title={`Card Title ${index + 1}`} // You can replace this with actual titles if you have them
+      images={[
+        { title: item.images[0].title || `Image ${index + 1}`, url: item.images[0].url || "" } // Replace this with real image data
+      ]}
+    />
         ))}
     </GridCard>
   );
